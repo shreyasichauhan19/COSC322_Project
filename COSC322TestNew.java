@@ -142,13 +142,15 @@ public class COSC322Test extends GamePlayer{
     }
     private void calculateBestMove() {
         // set the initial depth and alpha-beta values
+    	   // set the initial depth and alpha-beta values
         int depth = 3;
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
 
+       
         // get the current player's queen and arrow positions
-        ArrayList<Integer> myQueenPosCurr = gameBoard.getMyQueenPosition();
-        ArrayList<Integer> myArrowPos = gameBoard.getMyArrowPosition();
+        ArrayList<Integer> myQueenPosCurr = gameState.getMyQueenPosition();
+        ArrayList<Integer> myArrowPos = gameState.getMyArrowPosition();
 
         // initialize the best move with the current positions
         int qr = myQueenPosCurr.get(0);
@@ -159,8 +161,8 @@ public class COSC322Test extends GamePlayer{
         int qfc = qc;
 
         // get the available moves for the current player
-        ArrayList<ArrayList<Integer>> myQueenMoves = gameBoard.getValidMovesForQueen(myQueenPosCurr);
-        ArrayList<ArrayList<Integer>> myArrowMoves = gameBoard.getValidMovesForArrow(myArrowPos);
+        ArrayList<ArrayList<Integer>> myQueenMoves = gameState.getValidMovesForQueen(myQueenPosCurr);
+        ArrayList<ArrayList<Integer>> myArrowMoves = gameState.getValidMovesForArrow(myArrowPos);
 
         // iterate through all possible moves and evaluate them using alpha-beta pruning
         for (ArrayList<Integer> queenMove : myQueenMoves) {
@@ -172,11 +174,14 @@ public class COSC322Test extends GamePlayer{
                 int atc = arrowMove.get(1);
 
                 // make a copy of the current game board and update it with the current move
-                ArrayList<ArrayList<Integer>> newBoard = gameBoard;
-                gameClient.updateGameState(newBoard, myQueenPosCurr, queenMove, myArrowPos, arrowMove);
+                Map<String, Object> gameStateUpdate = new HashMap<>();
+                gameStateUpdate.put(AmazonsGameMessage.QUEEN_POS_CURR, myQueenPosCurr);
+                gameStateUpdate.put(AmazonsGameMessage.QUEEN_POS_NEXT, queenMove);
+                gameStateUpdate.put(AmazonsGameMessage.ARROW_POS, arrowMove);
+                gamegui.updateGameState(gameStateUpdate);
 
                 // evaluate the current move using alpha-beta pruning
-                int eval = alphaBeta(newBoard, depth, alpha, beta, false);
+                int eval = alphaBeta(gameState, depth, alpha, beta, false);
 
                 // update the best move if the current move has a higher evaluation score
                 if (eval > alpha) {
@@ -192,9 +197,98 @@ public class COSC322Test extends GamePlayer{
         }
 
         // update the game state with the best move and send it to the server
-        gameState.updateGameState(myQueenPosCurr, qr, qc, ar, ac);
+        Map<String, Object> gameStateUpdate = new HashMap<>();
+        gameStateUpdate.put(AmazonsGameMessage.QUEEN_POS_CURR, myQueenPosCurr);
+        gameStateUpdate.put(AmazonsGameMessage.QUEEN_POS_NEXT, Arrays.asList(qr, qc));
+        gameStateUpdate.put(AmazonsGameMessage.ARROW_POS, Arrays.asList(ar, ac));
+        gameState.updateGameState(gameStateUpdate);
         playerMove(qr, qc, ar, ac, qfr, qfc);
     }
+    
+    private int alphaBeta(ArrayList<ArrayList<Integer>> board, int depth, int alpha, int beta, boolean maximizingPlayer) {
+        if (depth == 0) {
+            return evaluateBoard(board);
+        }
+
+        if (maximizingPlayer) {
+            int maxEval = Integer.MIN_VALUE;
+            ArrayList<ArrayList<Integer>> myQueenPosCurr = board.get(0);
+            ArrayList<ArrayList<Integer>> myArrowPos = board.get(1);
+            ArrayList<ArrayList<Integer>> myQueenMoves = getValidMovesForQueen(myQueenPosCurr);
+            ArrayList<ArrayList<Integer>> myArrowMoves = getValidMovesForArrow(myArrowPos);
+
+            for (ArrayList<Integer> queenMove : myQueenMoves) {
+                for (ArrayList<Integer> arrowMove : myArrowMoves) {
+                    ArrayList<ArrayList<Integer>> newBoard = new ArrayList<>();
+                    newBoard.add(new ArrayList<>(queenMove));
+                    newBoard.add(new ArrayList<>(arrowMove));
+                    updateGameState(newBoard, myQueenPosCurr, queenMove, myArrowPos, arrowMove);
+                    int eval = alphaBeta(newBoard, depth - 1, alpha, beta, false);
+                    maxEval = Math.max(maxEval, eval);
+                    alpha = Math.max(alpha, eval);
+                    if (beta <= alpha) {
+                        break;
+                    }
+                }
+            }
+
+            return maxEval;
+        } else {
+            int minEval = Integer.MAX_VALUE;
+            ArrayList<ArrayList<Integer>> oppQueenPosCurr = board.get(2);
+            ArrayList<ArrayList<Integer>> oppArrowPos = board.get(3);
+            ArrayList<ArrayList<Integer>> oppQueenMoves = getValidMovesForQueen(oppQueenPosCurr);
+            ArrayList<ArrayList<Integer>> oppArrowMoves = getValidMovesForArrow(oppArrowPos);
+
+            for (ArrayList<Integer> queenMove : oppQueenMoves) {
+                for (ArrayList<Integer> arrowMove : oppArrowMoves) {
+                    ArrayList<ArrayList<Integer>> newBoard = new ArrayList<>();
+                    newBoard.add(oppQueenPosCurr);
+                    newBoard.add(oppArrowPos);
+                    newBoard.add(new ArrayList<>(queenMove));
+                    newBoard.add(new ArrayList<>(arrowMove));
+                    int eval = alphaBeta(newBoard, depth - 1, alpha, beta, true);
+                    minEval = Math.min(minEval, eval);
+                    beta = Math.min(beta, eval);
+                    if (beta <= alpha) {
+                        break;
+                    }
+                }
+            }
+
+            return minEval;
+        }
+    }
+
+    private int evaluateBoard(ArrayList<ArrayList<Integer>> gameBoard) {
+        int myQueenRow = gameBoard.get(0).get(0);
+        int myQueenCol = gameBoard.get(0).get(1);
+        int oppQueenRow = gameBoard.get(1).get(0);
+        int oppQueenCol = gameBoard.get(1).get(1);
+        int arrowRow = gameBoard.get(2).get(0);
+        int arrowCol = gameBoard.get(2).get(1);
+
+        // calculate the distance between my queen and the opponent queen
+        int queenDistance = Math.max(Math.abs(myQueenRow - oppQueenRow), Math.abs(myQueenCol - oppQueenCol));
+
+        // calculate the number of moves available to the opponent queen
+        ArrayList<ArrayList<Integer>> oppQueenMoves = getValidQueenMoves(oppQueenRow, oppQueenCol);
+        int oppQueenMovesCount = oppQueenMoves.size();
+
+        // calculate the number of moves available to my queen
+        ArrayList<ArrayList<Integer>> myQueenMoves = getValidQueenMoves(myQueenRow, myQueenCol);
+        int myQueenMovesCount = myQueenMoves.size();
+
+        // calculate the number of moves available to the arrow
+        ArrayList<ArrayList<Integer>> arrowMoves = getValidArrowMoves(arrowRow, arrowCol);
+        int arrowMovesCount = arrowMoves.size();
+
+        // compute the heuristic value
+        int heuristicValue = queenDistance + (5 * oppQueenMovesCount) - (3 * myQueenMovesCount) - (2 * arrowMovesCount);
+        return heuristicValue;
+    }
+
+    
     public ArrayList<ArrayList<Integer>> getValidMovesForQueen(ArrayList<Integer> queenPos) {
         ArrayList<ArrayList<Integer>> validMoves = new ArrayList<ArrayList<Integer>>();
 
