@@ -1,0 +1,155 @@
+
+package ubc.cosc322;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import sfs2x.client.entities.Room;
+import ygraph.ai.smartfox.games.Amazon.GameBoard;
+import ygraph.ai.smartfox.games.BaseGameGUI;
+import ygraph.ai.smartfox.games.GameClient;
+import ygraph.ai.smartfox.games.GameMessage;
+import ygraph.ai.smartfox.games.GamePlayer;
+import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
+
+/**
+ * An example illustrating how to implement a GamePlayer
+ * @author Yong Gao (yong.gao@ubc.ca)
+ * Jan 5, 2021
+ *
+ */
+
+public class COSC322Test extends GamePlayer{
+
+    private GameClient gameClient = null; 
+    private BaseGameGUI gamegui;
+	
+    private String userName = null;
+    private String passwd = null;
+    private ArrayList<ArrayList<Integer>> gameBoard = null;
+    
+    
+ 
+	
+    /**
+     * The main method
+     * @param args for name and passwd (current, any string would work)
+     */
+    public static void main(String[] args) {				 
+    	COSC322Test player = new COSC322Test(args[0], args[1]); 
+    	
+    	
+    	if(player.getGameGUI() == null) {
+    		player.Go();
+    	}
+    	else {
+    		BaseGameGUI.sys_setup();
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                	player.Go();
+                }
+            });
+    	}
+    }
+	
+    /**
+     * Any name and passwd 
+     * @param userName
+      * @param passwd
+     */
+    public COSC322Test(String userName, String passwd) {
+    	this.userName = userName;
+    	
+    	this.passwd = passwd;
+    	//To make a GUI-based player, create an instance of BaseGameGUI
+    	//and implement the method getGameGUI() accordingly
+    	this.gamegui = new BaseGameGUI(this);
+    }
+ 
+
+
+    @Override
+    public void onLogin() {
+    	System.out.println("Congratualations!!! "
+    			+ "I am called because the server indicated that the login is successfully");
+    	System.out.println("The next step is to find a room and join it: "
+    			+ "the gameClient instance created in my constructor knows how!"); 
+    	userName = gameClient.getUserName(); //we pass this in another method param... tbd
+    	if(gamegui != null) {
+    		gamegui.setRoomInformation(gameClient.getRoomList());
+    	}
+    } 
+    
+
+    @Override
+    public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
+        // This method will be called by the GameClient when it receives a game-related message
+        // from the server.
+    	    // create a local game board. record the actions of the opponent.
+    	  if (messageType.equals(GameMessage.GAME_STATE_BOARD)) {
+    	        ArrayList<Integer> boardState = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE);
+    	        gameBoard = new ArrayList<>();
+
+    	        // Convert the board state from a flat list to a 2D array list
+    	        for (int i = 0; i < 10; i++) {
+    	            ArrayList<Integer> row = new ArrayList<>();
+    	            for (int j = 0; j < 10; j++) {
+    	                row.add(boardState.get(i * 10 + j));
+    	            }
+    	            gameBoard.add(row);
+    	        }
+
+    	        gamegui.setGameState(boardState);
+    	    } else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
+    	    	  // Retrieve opponent's move details
+    	        ArrayList<Integer> oppQueenPosCurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
+    	        ArrayList<Integer> oppQueenPosNext = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_NEXT);
+    	        ArrayList<Integer> oppArrowPos = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS);
+
+    	     // Update game board with the move
+
+    	        gameBoard.get(oppQueenPosNext.get(0)).set(oppQueenPosNext.get(1), 1); // place moved queen
+    	        gameBoard.get(oppArrowPos.get(0)).set(oppArrowPos.get(1), 2); // place arrow
+    	        gameBoard.get(oppQueenPosCurr.get(0)).set(oppQueenPosCurr.get(1), 0); // remove old queen
+
+    	        // Update the GUI with the new game state
+    	        
+    	        gamegui.updateGameState(oppQueenPosCurr, oppQueenPosNext, oppArrowPos);
+
+
+    	    }
+    	    return true;
+    	
+    	}
+	/* To test your implementation of the game start two different instances of the human PLayer and have them start playing moves and 
+    have them talk to the server. */
+    
+    @Override
+    public String userName() {
+    	return userName;
+    }
+
+	@Override
+	public GameClient getGameClient() {
+		// TODO Auto-generated method stub
+		return this.gameClient;
+	}
+
+	@Override
+	public BaseGameGUI getGameGUI() {
+		// TODO Auto-generated method stub
+		return  this.gamegui;
+	}
+
+	@Override
+	public void connect() {
+		// TODO Auto-generated method stub
+    	gameClient = new GameClient(userName, passwd, this);			
+	}
+
+ 
+}//end of class
