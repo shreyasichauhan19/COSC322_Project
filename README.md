@@ -37,7 +37,7 @@ We also added the Manhattan and EmptyTileHeuristic implementations:
      * @param board the current game board
      * @return the score for this heuristic
      */
- /*  private static float function6(Graph board) {
+  private static float function6(Graph board) {
         int numMoves = 0;
         int numPieces = 0;
 
@@ -57,4 +57,4 @@ We also added the Manhattan and EmptyTileHeuristic implementations:
         float ratio = (float) numMoves / (float) numPieces;
 
         return ratio;
-    }*/ // this function is meant to calculate the Manhattan's distance 
+    }// this function is meant to calculate the Manhattan's distance 
