@@ -1,12 +1,10 @@
-package ubc.cosc322.queen_movement;
-
+package ubc.cosc322;
 import ubc.cosc322.COSC322Test;
 
 import java.util.*;
-
 public class Heuristics {
 
-    private record DistanceNode(Graph.Node node, COSC322Test.Tile relatedPlayer){
+    public record DistanceNode(Graph.Node node, COSC322Test.Tile relatedPlayer){
 
         @Override
         public boolean equals(Object o) { 
@@ -259,5 +257,54 @@ public class Heuristics {
             return w;
 
     }
+    /**
+     * Calculates the distance between the center of the board and the closest empty tile for a given player.
+     * The closer the empty tile is to the center, the higher the score.
+     * @param board the current game board
+     * @return the score for this heuristic
+     */
+    public static int emptyTilesNearPlayer(Graph g) {
+        int count = 0;
+        for (Graph.Node node : g.getNodes()) {
+            if (node.getValue().isPlayer()) {
+                for (Graph.Node neighbor : node.getNeighbors(node)) {
+                    if (neighbor.getValue().isEmpty()) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+
+    /**
+     * Calculates the number of moves available to a player's pieces divided by the total number of pieces on the board.
+     * A higher ratio indicates a more advantageous position for the player.
+     * @param board the current game board
+     * @return the score for this heuristic
+     */
+ /*  private static float function6(Graph board) {
+        int numMoves = 0;
+        int numPieces = 0;
+
+        // Count number of moves and pieces for the player
+        for (Graph.Node node : board.getNodes()) {
+            COSC322Test.Tile tile = node.getValue();
+            if (tile.isFire() || tile == COSC322Test.Tile.EMPTY) continue;
+
+            if (tile.isPlayer()) {
+                numPieces++;
+                numMoves += node.getValidMoves().size();
+            }
+        }
+
+        // Calculate ratio of moves to pieces
+        if (numPieces == 0) return 0f; // avoid division by zero
+        float ratio = (float) numMoves / (float) numPieces;
+
+        return ratio;
+    }*/ // this function is meant to calculate the Manhattan's distance 
 
 }
+

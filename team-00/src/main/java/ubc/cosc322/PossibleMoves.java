@@ -1,4 +1,5 @@
-package ubc.cosc322.queen_movement;
+package ubc.cosc322;
+
 
 import ubc.cosc322.COSC322Test;
 

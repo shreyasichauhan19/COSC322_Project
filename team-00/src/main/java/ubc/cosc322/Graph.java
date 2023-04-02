@@ -1,6 +1,7 @@
-package ubc.cosc322.queen_movement;
+package ubc.cosc322;
 
 import ubc.cosc322.COSC322Test;
+import ubc.cosc322.Heuristics.DistanceNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,16 +46,26 @@ public class Graph {
         nodes = new ArrayList<>(size);
     }
 
-    public Graph(int[][] board) {
+ /*   public Graph(int[][] board) {
         height = board.length;
         width = board[0].length;
 
         nodes = new ArrayList<>(height * width);
 
         initializeGraph(board);
-    }
+    }*/
 
-    /**
+    public Graph(int[][] initialBoardState) {
+		// TODO Auto-generated constructor stub
+    	   height = initialBoardState.length;
+           width = initialBoardState[0].length;
+
+           nodes = new ArrayList<>(height * width);
+
+           initializeGraph(initialBoardState);
+	}
+
+	/**
      * Takes a player's move information and updates the graph accordingly.
      * @param move A move record containing the move information
      * @param player
@@ -431,6 +442,16 @@ public class Graph {
         public List<Edge> getEdges(){
             return edges;
         }
+        public List<Node> getNeighbors(Node node) {
+            List<Node> neighbors = new ArrayList<>();
+            for (Edge edge : node.getEdges()) {
+                Node neighbor = edge.getNode();
+                if (neighbor.getValue() == COSC322Test.Tile.EMPTY) {
+                    neighbors.add(neighbor);
+                }
+            }
+            return neighbors;
+        }
 
         @Override
         public boolean equals(Object o) {
@@ -441,6 +462,39 @@ public class Graph {
         public int hashCode() {
             return super.hashCode();
         }
-    }
 
+
+/*		public List<DistanceNode> getValidMoves() {
+			// TODO Auto-generated method stub
+			 List<DistanceNode> validMoves = new ArrayList<>();
+			    for (Amazon amazon : amazons) {
+			        int row = amazon.getRow();
+			        int col = amazon.getColumn();
+			        // Check all eight directions
+			        for (int drow = -1; drow <= 1; drow++) {
+			            for (int dcol = -1; dcol <= 1; dcol++) {
+			                if (drow == 0 && dcol == 0) {
+			                    continue; // Skip the current position
+			                }
+			                int i = row + drow;
+			                int j = col + dcol;
+			                while (isValidPosition(i, j)) {
+			                    if (board[i][j] == null) {
+			                        // The cell is empty
+			                        validMoves.add(new DistanceNode(i, j));
+			                        i += drow;
+			                        j += dcol;
+			                    } else {
+			                        // The cell is occupied
+			                        break;
+			                    }
+			                }
+			            }
+			        }
+			    }
+			    return validMoves;
+		}*/
+
+    }
 }
+

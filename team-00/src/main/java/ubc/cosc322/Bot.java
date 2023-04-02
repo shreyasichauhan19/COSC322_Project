@@ -1,10 +1,11 @@
-package ubc.cosc322.game_players;
+package ubc.cosc322;
 
+import ubc.cosc322.COSC322Test;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import ubc.cosc322.COSC322Test;
+import sfs2x.client.entities.Room;
+import ubc.cosc322.Test;
 import ygraph.ai.smartfox.games.*;
 import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
 
@@ -108,7 +109,7 @@ public class Bot extends GamePlayer{
 				}
 			}
 			default -> {
-				String msg = "Unhandled Message Type occurred: " + messageType;
+				String msg = "messageType is unreachable or not handled: " + messageType;
 				logger.warning(msg);
 			}
 		}
@@ -123,10 +124,10 @@ public class Bot extends GamePlayer{
 			gameGui.updateGameState(moveDetails);
 			gameClient.sendMoveMessage(moveDetails);
 
-			logger.info("Made our move. Waiting on opponent.");
+			logger.info("our move is made, waiting on the opponent.");
 
 		}else {
-			logger.severe("No move found. We've lost.");
+			logger.severe("no further moves found. We've lost.");
 		}
 	}
 
@@ -152,4 +153,4 @@ public class Bot extends GamePlayer{
 	}
 
  
-}//end of clas
+}//end of class

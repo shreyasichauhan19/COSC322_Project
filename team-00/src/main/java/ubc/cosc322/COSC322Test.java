@@ -1,11 +1,30 @@
+
 package ubc.cosc322;
 
-import ubc.cosc322.queen_movement.*;
-import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
-
-import java.util.*;
+import ubc.cosc322.Graph;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
+import sfs2x.client.entities.Room;
+import ygraph.ai.smartfox.games.Amazon.GameBoard;
+import ygraph.ai.smartfox.games.BaseGameGUI;
+import ygraph.ai.smartfox.games.GameClient;
+import ygraph.ai.smartfox.games.GameMessage;
+import ygraph.ai.smartfox.games.GamePlayer;
+import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
+
+/**
+ * An example illustrating how to implement a GamePlayer
+ * @author Yong Gao (yong.gao@ubc.ca)
+ * Jan 5, 2021
+ *
+ */
 
 public class COSC322Test{
 
@@ -199,7 +218,7 @@ public class COSC322Test{
 
 		movesMap = PossibleMoves.allMoves(currentState, opponent);
 		if(movesMap.isEmpty()){
-			logger.info("Opponent has no valid moves. We've won!");
+			logger.info("The opponent has no more valid moves. We won!");
 		}
 
 		return playerMove;

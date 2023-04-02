@@ -1,8 +1,11 @@
-package ubc.cosc322.game_players;
+package ubc.cosc322;
 
+import ubc.cosc322.COSC322Test;
 import ygraph.ai.smartfox.games.BaseGameGUI;
 import ygraph.ai.smartfox.games.GamePlayer;
 import ygraph.ai.smartfox.games.amazons.HumanPlayer;
+import sfs2x.client.entities.Room;
+
 
 public class Test {
 

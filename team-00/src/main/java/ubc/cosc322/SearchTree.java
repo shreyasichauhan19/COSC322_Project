@@ -1,5 +1,4 @@
-package ubc.cosc322.queen_movement;
-
+package ubc.cosc322;
 
 import java.util.Map;
 
@@ -28,9 +27,9 @@ public class SearchTree {
 
             for (Map.Entry<PossibleMoves.Move, Graph> entry : movesMap.entrySet()) {
                 PossibleMoves.Move currentMove = entry.getKey();
-                float chosenHeuristic = AlphaBeta(entry.getValue(), depth - 1, alpha, beta, Tile.BLACK, currentMove).heuristic;
-                if (bestHeuristic < chosenHeuristic) {
-                    bestHeuristic = chosenHeuristic;
+                float selectedHeuristic = AlphaBeta(entry.getValue(), depth - 1, alpha, beta, Tile.BLACK, currentMove).heuristic;
+                if (bestHeuristic < selectedHeuristic) {
+                    bestHeuristic = selectedHeuristic;
                     bestMove = currentMove;
                 }
 
@@ -61,7 +60,8 @@ public class SearchTree {
     }
 
     public static PossibleMoves.Move performAlphaBeta(Graph node, Tile player, int depth) {
-        MinimaxMove chosenOne = AlphaBeta(node, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, player, null);
-        return chosenOne.move;
+        MinimaxMove selectedMove = AlphaBeta(node, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, player, null);
+        return selectedMove.move;
     }
 }
+
