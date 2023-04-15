@@ -6,6 +6,14 @@ The game's objective is to be the last player to make a legal move. On each turn
 
 ### Run the Game
 
+1. Install `maven`, I used `brew` to do so.
+2. Clone the prokect repository on your machine
+3. Open up the project in an IDE of your choice I used Eclipse IDE
+4. Right click on the project -> Run As -> Run Configurations -> Java Application
+5. We are now going to create a new run configuration for the project by clicking on Java Application.
+6. To this new configuration, add arguments. This is going to be your `username` and `password`
+7. You are all set. Run the Java configuration you just created and you should see something like this: 
+
 
 ### How to win
 Players take turns moving and shooting arrows and occupying an empty square until one of the victory conditions is met. The game is won by the player who either captures all of the opponent's Amazons or successfully blocks their opponent's Amazons so they cannot make a move.
