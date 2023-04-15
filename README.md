@@ -6,6 +6,8 @@ The game's objective is to be the last player to make a legal move. On each turn
 
 ### Run the Game
 
+Brefore we begin, please note that it take two players(in the same game room) for the AI to start playing. 
+
 1. Install `maven`, I used `brew` to do so.
 2. Clone the prokect repository on your machine
 3. Open up the project in an IDE of your choice I used Eclipse IDE
@@ -13,7 +15,17 @@ The game's objective is to be the last player to make a legal move. On each turn
 5. We are now going to create a new run configuration for the project by clicking on Java Application.
 6. To this new configuration, add arguments. This is going to be your `username` and `password`
 7. You are all set. Run the Java configuration you just created and you should see something like this: 
+![A screenshot of the game](https://github.com/shreyasichauhan19/COSC322_Project/blob/main/image.png)
 
+Once you run the game and join a room, you should see something like this on your console: 
+`Apr 15, 2023 12:35:06 A.M. ubc.cosc322.Bot onLogin
+INFO: Login Successful.
+Yellow Lake(0,0)
+Yellow Lake
+(Room-join-response) RoomName:Yellow Lake; NumUser: 1; PlayerID: 1
+[sourceRoom, cmd, params]---[game-state, room.name]
+Extension Request from dispatch(): cosc322.game-state.board---Yellow Lake
+cmd:cosc322.game-state.board; From:Yellow Lake; CurrRoom: Yellow Lake`
 
 ### How to win
 Players take turns moving and shooting arrows and occupying an empty square until one of the victory conditions is met. The game is won by the player who either captures all of the opponent's Amazons or successfully blocks their opponent's Amazons so they cannot make a move.
