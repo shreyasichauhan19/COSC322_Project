@@ -1,29 +1,31 @@
 # COSC322_Project
 The game of Amazons was invented by Walter Zamkauskas. It is a two-player abstract strategy board game played on a 10x10 square board with four amazons and several arrows. Each player places their four amazons on the board in their starting positions: two on one side of the board and two on the opposite side. The amazons can move like both a queen 
 
-###Objective: The game's objective is to be the last player to make a legal move. On each turn, a player can move one of their Amazons to a new square, using either a queen move (any number of squares horizontally, vertically, or diagonally) or a knight move (two squares in one direction followed by one square perpendicular to that direction). After moving, the player must shoot an arrow from Amazon's new location to any empty square, blocking that square and creating an obstacle for both players. The arrow can be shot in any direction but cannot pass through any existing obstacles.
+### Objective
+The game's objective is to be the last player to make a legal move. On each turn, a player can move one of their Amazons to a new square, using either a queen move (any number of squares horizontally, vertically, or diagonally) or a knight move (two squares in one direction followed by one square perpendicular to that direction). After moving, the player must shoot an arrow from Amazon's new location to any empty square, blocking that square and creating an obstacle for both players. The arrow can be shot in any direction but cannot pass through any existing obstacles.
 
-###How to win: Players take turns moving and shooting arrows and occupying an empty square until one of the victory conditions is met. The game is won by the player who either captures all of the opponent's Amazons or successfully blocks their opponent's Amazons so they cannot make a move.
+### Run the Game
 
-###Algorithm
+
+### How to win
+Players take turns moving and shooting arrows and occupying an empty square until one of the victory conditions is met. The game is won by the player who either captures all of the opponent's Amazons or successfully blocks their opponent's Amazons so they cannot make a move.
+
+### Algorithm
 We researched various graph and tree search algorithms for the game of Amazons and shortlisted three options: alpha-beta pruning, min-max, and Monte Carlo tree search. After evaluating the performance of each algorithm, we decided to use both the min-max and alpha-beta pruning algorithms in our implementation. 
 The min-max algorithm searches all moves and selects the one with the best outcome, but can be slow for games with many options. The alpha-beta pruning algorithm optimizes the min-max algorithm by eliminating unpromising branches, reducing computational costs for games with many moves.
 By combining both algorithms, we can leverage their strengths while mitigating their weaknesses. The min-max algorithm explores all moves to find the best one, and the alpha-beta pruning algorithm reduces computational costs. Our research has shown that using both algorithms is the optimal approach for implementing Amazon, leading to top performance and reduced response times regardless of the number of moves.
 
-###Implementation
+### Implementation
 Bot:
-
 This program defines a game-playing bot named "Bot" that uses the SmartFoxServer 2X (SFS2X) platform to play the game of Amazons. The bot can play as either the white or black player and implements the GamePlayer interface. It includes methods for handling game messages, making moves, and connecting to the SFS2X server. Additionally, the program features a main() method that runs the bot from the command line and takes in the username and password as arguments.
 
 COSC322Test:
-
 This section begins by defining an enumeration class, Tile, which represents the possible states of a cell on the Amazons game board. These states include EMPTY, WHITE, BLACK, and FIRE.
 Next, the program defines several constants, including NODE_LIMIT, which limits the total number of nodes the AI can evaluate; ROW_LENGTH, which represents the number of cells in a row; and INITIAL_BOARD_STATE, a 2D array that represents the initial state of the game board.
 The bulk of the section is dedicated to the COSC322Test class, which implements the GamePlayer interface for the Amazon game. This class includes a setPlayer method that sets the player and opponent tiles, a logger object for logging messages during the game, and currentState and movesMap objects to keep track of the current game state and possible moves, respectively. There are also utility methods to convert between indices and array lists and to extract the current and next queen positions and arrow positions from the AmazonsGameMessage object.
 While this class includes some utility methods and a skeleton for the GamePlayer interface, the implementation of the actual game-playing logic is done in other classes: Graph, Heuristics, PossibleMoves, and SearchTree.
 
 Graph:
-
 The Graph data structure is used to represent the Amazon game board. It contains methods for creating and updating the graph and for computing the shortest distance between two nodes using a heuristic algorithm.The class has a constructor that takes a 2D array of integers representing the initial state of the game board. It initializes the graph by creating a Node object for each tile on the board and connecting each node to its adjacent nodes.
 The `updateGraph` method takes a move record and updates the graph accordingly. The method sets the current node to empty, enables edges for all connected nodes, sets the next node to the player's tile, disables edges for all connected nodes, and sets the arrow node to the FIRE tile. The method then refreshes the distances for all nodes.
 The copy method creates a deep copy of a given graph. The method creates a new graph object with the same number of nodes as the source graph and then copies the properties of each node and its edges to the new graph.
