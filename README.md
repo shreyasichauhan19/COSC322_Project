@@ -9,7 +9,7 @@ The game's objective is to be the last player to make a legal move. On each turn
 Brefore we begin, please note that it take two players(in the same game room) for the AI to start playing. 
 
 1. Install `maven`, I used `brew` to do so.
-2. Clone the prokect repository on your machine
+2. Clone the project repository on your machine
 3. Open up the project in an IDE of your choice I used Eclipse IDE
 4. Right click on the project -> Run As -> Run Configurations -> Java Application
 5. We are now going to create a new run configuration for the project by clicking on Java Application.
@@ -53,8 +53,3 @@ Private helper methods called `initializeGraph`, `createNodes`, and `addEdge` ar
 Heuristics:
 This section describes the implementation of the `Heuristics` class, which is responsible for calculating a heuristic score for a given game state.
 The `allDistances` method sets the `kDist` and `qDist` values on each empty tile on the board for a given player. These values represent the minimum number of moves required for the player
-
-
-
-
-
