@@ -15,7 +15,7 @@ Brefore we begin, please note that it take two players(in the same game room) fo
 5. We are now going to create a new run configuration for the project by clicking on Java Application.
 6. To this new configuration, add arguments. This is going to be your `username` and `password`
 7. You are all set. Run the Java configuration you just created and you should see something like this: 
-![A screenshot of the game](https://github.com/shreyasichauhan19/COSC322_Project/blob/main/image.png)
+![A screenshot of the game](https://github.com/shreyasichauhan19/COSC322_Project/blob/main/img.png)
 
 Once you run the game and join a room, you should see something like this on your console: 
 `Apr 15, 2023 12:35:06 A.M. ubc.cosc322.Bot onLogin
